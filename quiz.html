@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Averta:wght@400;700&display=swap">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Averta:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Averta', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f8f8;
+        }
+
+        .quiz-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        h1 {
+            font-weight: 700;
+            color: #0056b3;
+            margin-bottom: 20px;
+        }
+
+        .progress {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .question {
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .options li {
+            margin: 10px 0;
+        }
+
+        .options button {
+            background-color: #e0e7ff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #333;
+            width: 80%;
+            transition: background-color 0.3s ease;
+        }
+
+        .options button:hover {
+            background-color: #c7d2fe;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .result.correct {
+            color: #5cb85c;
+        }
+
+        .result.incorrect {
+            color: #d9534f;
+        }
+
+        .summary {
+            display: none;
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .next-button {
+            display: none;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #0056b3;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .next-button:hover {
+            color: #004499;
+        }
+
+        .back-link {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #0056b3;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .back-link:hover {
+            color: #004499;
+        }
+
+        .quiz-image {
+            width: 100px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <img src="klima-ikon7.png" alt="Quiz Image" class="quiz-image">
+        <h1>CICEROs klimaquiz!</h1>
+        <div class="progress" id="progress">Question 1/5</div>
+
+        <div class="question">
+            <p id="question-text">What is the capital of France?</p>
+            <ul class="options">
+                <li><button onclick="checkAnswer(this, 'incorrect')">Madrid</button></li>
+                <li><button onclick="checkAnswer(this, 'incorrect')">Berlin</button></li>
+                <li><button onclick="checkAnswer(this, 'correct')">Paris</button></li>
+            </ul>
+        </div>
+        <div class="result" id="result"></div>
+        <div class="summary" id="summary"></div>
+        <div class="next-button" id="next-button" onclick="nextQuestion()">Next question →</div>
+        <div class="back-link" id="back-link" style="display: none;">
+            <a href="https://cicero.oslo.no/no/klima" target="_blank">Tilbake til Magasinet KLIMA</a>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { question: "What is the capital of France?", options: ["Madrid", "Berlin", "Paris"], correct: 2 },
+            { question: "What is 2 + 2?", options: ["3", "4", "5"], correct: 1 },
+            { question: "What is the largest planet in our solar system?", options: ["Earth", "Mars", "Jupiter"], correct: 2 },
+            { question: "Who wrote 'Hamlet'?", options: ["Charles Dickens", "William Shakespeare", "Mark Twain"], correct: 1 },
+            { question: "What is the boiling point of water?", options: ["90°C", "100°C", "120°C"], correct: 1 }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('question-text').innerText = question.question;
+            const options = document.querySelectorAll('.options button');
+            options.forEach((button, index) => {
+                button.innerText = question.options[index];
+                button.onclick = () => checkAnswer(button, index === question.correct ? 'correct' : 'incorrect');
+            });
+            document.getElementById('result').innerText = '';
+            document.getElementById('next-button').style.display = 'none';
+            updateProgress();
+        }
+
+        function checkAnswer(button, answer) {
+            const resultDiv = document.getElementById('result');
+            if (answer === 'correct') {
+                resultDiv.innerText = 'Correct!';
+                resultDiv.classList.add('correct');
+                resultDiv.classList.remove('incorrect');
+                score++;
+            } else {
+                resultDiv.innerText = 'Incorrect. Try again!';
+                resultDiv.classList.add('incorrect');
+                resultDiv.classList.remove('correct');
+            }
+            disableButtons();
+            if (currentQuestion < questions.length - 1) {
+                document.getElementById('next-button').style.display = 'block';
+            } else {
+                setTimeout(showSummary, 1000); // Show summary after 1 second delay
+            }
+        }
+
+        function disableButtons() {
+            const buttons = document.querySelectorAll('.options button');
+            buttons.forEach(button => button.disabled = true);
+        }
+
+        function enableButtons() {
+            const buttons = document.querySelectorAll('.options button');
+            buttons.forEach(button => button.disabled = false);
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                enableButtons();
+                loadQuestion();
+            } else {
+                showSummary();
+            }
+        }
+
+        function updateProgress() {
+            const progressDiv = document.getElementById('progress');
+            progressDiv.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+        }
+
+        function showSummary() {
+            const summaryDiv = document.getElementById('summary');
+            summaryDiv.innerText = `Great! You got ${score} out of ${questions.length}`;
+            summaryDiv.style.display = 'block';
+            document.getElementById('next-button').style.display = 'none';
+            document.getElementById('back-link').style.display = 'block';
+        }
+
+        loadQuestion();
+    </script>
+
+</body>
+</html>

@@ -131,7 +131,7 @@
     <div class="quiz-container">
         <img src="klima-ikon7.png" alt="Quiz Image" class="quiz-image">
         <h1>CICEROs klimaquiz!</h1>
-        <div class="progress" id="progress">Question 1/5</div>
+        <div class="progress" id="progress">Spørsmål 1/5</div>
 
         <div class="question">
             <p id="question-text">What is the capital of France?</p>
@@ -143,7 +143,7 @@
         </div>
         <div class="result" id="result"></div>
         <div class="summary" id="summary"></div>
-        <div class="next-button" id="next-button" onclick="nextQuestion()">Next question →</div>
+        <div class="next-button" id="next-button" onclick="nextQuestion()">Neste spørsmål →</div>
         <div class="back-link" id="back-link" style="display: none;">
             <a href="https://cicero.oslo.no/no/klima" target="_blank">Tilbake til Magasinet KLIMA</a>
         </div>
@@ -151,11 +151,11 @@
 
     <script>
         const questions = [
-            { question: "What is the capital of France?", options: ["Madrid", "Berlin", "Paris"], correct: 2 },
-            { question: "What is 2 + 2?", options: ["3", "4", "5"], correct: 1 },
-            { question: "What is the largest planet in our solar system?", options: ["Earth", "Mars", "Jupiter"], correct: 2 },
-            { question: "Who wrote 'Hamlet'?", options: ["Charles Dickens", "William Shakespeare", "Mark Twain"], correct: 1 },
-            { question: "What is the boiling point of water?", options: ["90°C", "100°C", "120°C"], correct: 1 }
+            { question: "SRM er en form for klimamanipulering, hva står forkortelsen for?", options: ["Solar Radiation Modification", "Solar Radiation Management", "Solar Radiation Monster"], correct: 1 },
+            { question: "Hvor stor andel av bilparken i Norge er elektisk?", options: ["20", "50", "95"], correct: 1 },
+            { question: "Hvilken verdensdel anses som mest rammet av klimakatastrofer?", options: ["Europa", "Asia", "Afrika"], correct: 2 },
+            { question: "Når det er tørke i Europa, synker vannstanden i Rhinen. Hvor mye MINDRE tror du et lasteskip på Rhinen i gjennomsnitt kan frakte, hvis vannstanden synker 10 cm??", options: ["100 tonn", "50 tonn", "20 tonn"], correct: 1 },
+            { question: "Hvor stor andel av global oppvarming skyldes flytrafikk?", options: ["2", "4", "6"], correct: 1 }
         ];
 
         let currentQuestion = 0;

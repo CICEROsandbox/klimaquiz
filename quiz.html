@@ -134,11 +134,9 @@
         <div class="progress" id="progress">Spørsmål 1/5</div>
 
         <div class="question">
-            <p id="question-text">What is the capital of France?</p>
-            <ul class="options">
-                <li><button onclick="checkAnswer(this, 'incorrect')">Madrid</button></li>
-                <li><button onclick="checkAnswer(this, 'incorrect')">Berlin</button></li>
-                <li><button onclick="checkAnswer(this, 'correct')">Paris</button></li>
+            <p id="question-text"></p>
+            <ul class="options" id="options-list">
+                <!-- Options will be dynamically generated here -->
             </ul>
         </div>
         <div class="result" id="result"></div>
@@ -151,11 +149,11 @@
 
     <script>
         const questions = [
-            { question: "SRM er en form for klimamanipulering, hva står forkortelsen for?", options: ["Solar Radiation Modification", "Solar Radiation Management", "Solar Radiation Monster"], correct: 1 },
-            { question: "Hvor stor andel av bilparken i Norge er elektisk?", options: ["20", "50", "95"], correct: 1 },
-            { question: "Hvilken verdensdel anses som mest rammet av klimakatastrofer?", options: ["Europa", "Asia", "Afrika"], correct: 2 },
-            { question: "Når det er tørke i Europa, synker vannstanden i Rhinen. Hvor mye MINDRE tror du et lasteskip på Rhinen i gjennomsnitt kan frakte, hvis vannstanden synker 10 cm??", options: ["100 tonn", "50 tonn", "20 tonn"], correct: 1 },
-            { question: "Hvor stor andel av global oppvarming skyldes flytrafikk?", options: ["2", "4", "6"], correct: 1 }
+            { question: "SRM er en form for klimamanipulering, hva står forkortelsen for?", options: ["Solar Radiation Modification", "Solar Radiation Management", "Solar Radiation Monster"], correct: 0 },
+            { question: "Hvor stor andel av bilparken i Norge er elektrisk?", options: ["20%", "50%", "95%"], correct: 0 },
+            { question: "Hvilken verdensdel anses som mest rammet av klimakatastrofer?", options: ["Europa", "Asia", "Afrika"], correct: 1 },
+            { question: "Når det er tørke i Europa, synker vannstanden i Rhinen. Hvor mye MINDRE tror du et lasteskip på Rhinen i gjennomsnitt kan frakte, hvis vannstanden synker 10 cm?", options: ["100 tonn", "50 tonn", "20 tonn"], correct: 0 },
+            { question: "Hvor stor andel av global oppvarming skyldes flytrafikk?", options: ["2%", "4%", "6%"], correct: 1 }
         ];
 
         let currentQuestion = 0;
@@ -164,27 +162,34 @@
         function loadQuestion() {
             const question = questions[currentQuestion];
             document.getElementById('question-text').innerText = question.question;
-            const options = document.querySelectorAll('.options button');
-            options.forEach((button, index) => {
-                button.innerText = question.options[index];
-                button.onclick = () => checkAnswer(button, index === question.correct ? 'correct' : 'incorrect');
+            const optionsList = document.getElementById('options-list');
+            optionsList.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const li = document.createElement('li');
+                const button = document.createElement('button');
+                button.innerText = option;
+                button.onclick = () => checkAnswer(button, index === question.correct);
+                li.appendChild(button);
+                optionsList.appendChild(li);
             });
             document.getElementById('result').innerText = '';
             document.getElementById('next-button').style.display = 'none';
             updateProgress();
         }
 
-        function checkAnswer(button, answer) {
+        function checkAnswer(button, isCorrect) {
             const resultDiv = document.getElementById('result');
-            if (answer === 'correct') {
-                resultDiv.innerText = 'Correct!';
+            const correctButton = document.querySelectorAll('.options button')[questions[currentQuestion].correct];
+            if (isCorrect) {
+                resultDiv.innerText = 'Riktig!';
                 resultDiv.classList.add('correct');
                 resultDiv.classList.remove('incorrect');
                 score++;
             } else {
-                resultDiv.innerText = 'Incorrect. Try again!';
+                resultDiv.innerText = 'Feil!';
                 resultDiv.classList.add('incorrect');
                 resultDiv.classList.remove('correct');
+                correctButton.style.backgroundColor = '#5cb85c'; // Highlight the correct answer
             }
             disableButtons();
             if (currentQuestion < questions.length - 1) {
@@ -216,12 +221,22 @@
 
         function updateProgress() {
             const progressDiv = document.getElementById('progress');
-            progressDiv.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            progressDiv.innerText = `Spørsmål ${currentQuestion + 1} av ${questions.length}`;
         }
 
         function showSummary() {
             const summaryDiv = document.getElementById('summary');
-            summaryDiv.innerText = `Great! You got ${score} out of ${questions.length}`;
+            let feedback;
+            if (score === 5) {
+                feedback = "Fantastisk! Er du klimaforsker?";
+            } else if (score >= 3) {
+                feedback = "Bra jobba! Du svarte riktig på " + score + " av 5.";
+            } else if (score >= 1) {
+                feedback = "Du fikk" + score + " av 5 riktig. Jaja, prøv igjen neste gang.";
+            } else {
+                feedback = "Auda - null rette...";
+            }
+            summaryDiv.innerText = feedback;
             summaryDiv.style.display = 'block';
             document.getElementById('next-button').style.display = 'none';
             document.getElementById('back-link').style.display = 'block';

@@ -180,6 +180,7 @@
         function checkAnswer(button, isCorrect) {
             const resultDiv = document.getElementById('result');
             const correctButton = document.querySelectorAll('.options button')[questions[currentQuestion].correct];
+            correctButton.style.backgroundColor = '#5cb85c'; // Highlight the correct answer
             if (isCorrect) {
                 resultDiv.innerText = 'Riktig!';
                 resultDiv.classList.add('correct');
@@ -189,14 +190,15 @@
                 resultDiv.innerText = 'Feil!';
                 resultDiv.classList.add('incorrect');
                 resultDiv.classList.remove('correct');
-                correctButton.style.backgroundColor = '#5cb85c'; // Highlight the correct answer
             }
             disableButtons();
-            if (currentQuestion < questions.length - 1) {
-                document.getElementById('next-button').style.display = 'block';
-            } else {
-                setTimeout(showSummary, 1000); // Show summary after 1 second delay
-            }
+            setTimeout(() => {
+                if (currentQuestion < questions.length - 1) {
+                    nextQuestion();
+                } else {
+                    showSummary();
+                }
+            }, 2000); // Proceed to the next question after 2 seconds
         }
 
         function disableButtons() {
@@ -232,7 +234,7 @@
             } else if (score >= 3) {
                 feedback = "Bra jobba! Du svarte riktig på " + score + " av 5.";
             } else if (score >= 1) {
-                feedback = "Du fikk" + score + " av 5 riktig. Jaja, prøv igjen neste gang.";
+                feedback = "Du fikk " + score + " av 5 riktig. Jaja, prøv igjen neste gang.";
             } else {
                 feedback = "Auda - null rette...";
             }

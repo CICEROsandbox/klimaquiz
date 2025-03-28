@@ -80,7 +80,7 @@
         }
 
         .result.correct {
-            color: #00aa78;
+            color: #3250c8;
         }
 
         .result.incorrect {
@@ -184,7 +184,7 @@
         function checkAnswer(button, isCorrect) {
             const resultDiv = document.getElementById('result');
             const correctButton = document.querySelectorAll('.options button')[questions[currentQuestion].correct];
-            correctButton.style.backgroundColor = '#5cb85c'; // Highlight the correct answer
+            correctButton.style.backgroundColor = '#3250c8'; // Highlight the correct answer
             if (isCorrect) {
                 resultDiv.innerText = 'Riktig!';
                 resultDiv.classList.add('correct');
